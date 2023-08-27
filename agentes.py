@@ -243,6 +243,7 @@ class Organizacion(Agent):
         for contenedor in self.Contenedores:
           print("peso: " + str(contenedor.weight) + ", tamaño: " + str(contenedor.size) + ", estatus: " + str(contenedor.status))
 
+# ya no necesitamos esta funcion para el API
 def get_status_grid(model):
   draw = np.zeros((model.width, model.height))
   for content in model.grid.coord_iter():
@@ -269,10 +270,10 @@ def get_status_grid(model):
     # para cada diferente tipo de agente usar draw[x][y] y asignarle un numero unico.
     # si es una grua y esta cargando que sea diferente el numero a una grua que no.
   return draw
-
 class Puerto(Model):
   def __init__(self):
     # cambiar width y height
+    self.lista_master_agentes = []
     self.width = 20
     self.height = 14
     self.schedule = SimultaneousActivation(self)
@@ -292,15 +293,19 @@ class Puerto(Model):
     x1 = 3
     y1 = 4
     self.schedule.add(gruaP1)
+    self.lista_master_agentes.append(gruaP1)
     self.grid.place_agent(gruaP1, (x1, y1))
     gruaP2 = GruaPortico("p2",self, False)
     self.schedule.add(gruaP2)
+    self.lista_master_agentes.append(gruaP2)
     self.grid.place_agent(gruaP2, (3, 5))
     gruaP3 = GruaPortico("p3",self, False)
     self.schedule.add(gruaP3)
+    self.lista_master_agentes.append(gruaP3)
     self.grid.place_agent(gruaP3, (3, 6))
     gruaP4 = GruaPortico("p4",self, False)
     self.schedule.add(gruaP4)
+    self.lista_master_agentes.append(gruaP4)
     self.grid.place_agent(gruaP4, (3, 7))
     #------------------------------------
 
@@ -308,45 +313,58 @@ class Puerto(Model):
     x2 = 6
     y2 = 5
     self.schedule.add(explanada)
+    self.lista_master_agentes.append(explanada)
     self.grid.place_agent(explanada, (x2, y2))
 
     gruaRTG = GruaRTG(3, self)
     x3 = 13
     y3 = 2
     self.schedule.add(gruaRTG)
+    self.lista_master_agentes.append(gruaRTG)
     self.grid.place_agent(gruaRTG, (x3, y3))
 
     self.exportados = Organizacion(4, self, "Exportados")
     x4 = 14
     y4 = 2
     self.schedule.add(self.exportados)
+    self.lista_master_agentes.append(self.exportados)
     self.grid.place_agent(self.exportados, (x4, y4))
     gruaRTG2 = GruaRTG(5, self)
     x5 = 13
     y5 = 6
     self.schedule.add(gruaRTG2)
+    self.lista_master_agentes.append(gruaRTG2)
     self.grid.place_agent(gruaRTG2, (x5, y5))
     self.almacen = Organizacion(6, self, "Almacen")
     x6 = 14
     y6 = 6
     self.schedule.add(self.almacen)
+    self.lista_master_agentes.append(self.almacen)
     self.grid.place_agent(self.almacen, (x6, y6))
     self.vacios = Organizacion(7, self, "Vacios")
     x7 = 14
     y7 = 9
     self.schedule.add(self.vacios)
+    self.lista_master_agentes.append(self.vacios)
     self.grid.place_agent(self.vacios, (x7, y7))
     gruaRTG3 = GruaRTG(8, self)
     x8 = 13
     y8 = 9
     self.schedule.add(gruaRTG3)
+    self.lista_master_agentes.append(gruaRTG3)
     self.grid.place_agent(gruaRTG3, (x8, y8))
 
     # Obtenemos la informacion de nuestro grid.
+    # para el API creo que ya no necesitamos un datacollector, solo la funcion para llamar desde main.
     self.datacollector = mesa.DataCollector(
         # no estoy seguro si el reporter de Posicion funcione solo asi, si funciona agregar otros atributos que queremos de los agentes.
         model_reporters={"Agents": get_status_grid}, agent_reporters={"Posicion":"pos"}
     )
+  def get_data(self):
+    data = {}
+    for agent in self.lista_master_agentes:
+      data[agent.unique_id] = agent.pos
+    return data
 
   def step(self):
     self.datacollector.collect(self)
@@ -356,31 +374,3 @@ class Puerto(Model):
     self.almacen.imprimo_contenidos()
     self.exportados.imprimo_contenidos()
     self.vacios.imprimo_contenidos()
-
-import matplotlib
-import matplotlib.pyplot as plt
-import matplotlib.animation as animation
-
-starter_model = Puerto()
-def main():
-
-  for i in range(100):
-    starter_model.step()
-
-  starter_model.imprimo()
-
-if __name__ == "__main__":
-  main()
-
-frame = starter_model.datacollector.get_model_vars_dataframe()
-fig, axs = plt.subplots(figsize=(5,5))
-cmap = plt.get_cmap("viridis", 9)
-patch = plt.imshow(frame.iloc[0][0], cmap=cmap)
-
-def animate(index):
-  patch.set_data(frame.iloc[index][0])
-# iterations es la cantidad de steps que tomo el modelo.
-iterations = 100
-anim = animation.FuncAnimation(fig, animate, frames=iterations)
-from IPython.display import HTML
-HTML(anim.to_jshtml())
