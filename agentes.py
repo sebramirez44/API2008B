@@ -243,33 +243,7 @@ class Organizacion(Agent):
         for contenedor in self.Contenedores:
           print("peso: " + str(contenedor.weight) + ", tamaño: " + str(contenedor.size) + ", estatus: " + str(contenedor.status))
 
-# ya no necesitamos esta funcion para el API
-def get_status_grid(model):
-  draw = np.zeros((model.width, model.height))
-  for content in model.grid.coord_iter():
-    agent, (x,y) = content
-    if isinstance(agent, Barco):
-      draw[x][y] = 1
-    elif isinstance(agent, GruaPortico):
-      if agent.cargando == True:
-        draw[x][y] = 2
-      else:
-        draw[x][y] = 3
-    elif isinstance(agent, Explanada):
-      draw[x][y] = 4
-    elif isinstance(agent, GruaRTG):
-      draw[x][y] = 5
-    elif isinstance(agent, Organizacion):
-      if (agent.tipoContenedores == "Exportados"):
-        draw[x][y] = 6
-      elif (agent.tipoContenedores == "Almacen"):
-        draw[x][y] = 7
-      elif (agent.tipoContenedores == "Vacios"):
-        draw[x][y] = 8
 
-    # para cada diferente tipo de agente usar draw[x][y] y asignarle un numero unico.
-    # si es una grua y esta cargando que sea diferente el numero a una grua que no.
-  return draw
 class Puerto(Model):
   def __init__(self):
     # cambiar width y height
@@ -354,15 +328,12 @@ class Puerto(Model):
     self.lista_master_agentes.append(gruaRTG3)
     self.grid.place_agent(gruaRTG3, (x8, y8))
 
-    # Obtenemos la informacion de nuestro grid.
-    # para el API creo que ya no necesitamos un datacollector, solo la funcion para llamar desde main.
-    self.datacollector = mesa.DataCollector(
-        # no estoy seguro si el reporter de Posicion funcione solo asi, si funciona agregar otros atributos que queremos de los agentes.
-        model_reporters={"Agents": get_status_grid}, agent_reporters={"Posicion":"pos"}
-    )
+    # para el API ya no necesitamos un datacollector, solo la funcion para llamar desde main.
+
   def get_data(self):
     data = {}
     for agent in self.lista_master_agentes:
+    #   aqui agregar la logica que si es un agente grua mandar si esta cargando o no.
       data[agent.unique_id] = agent.pos
     return data
 
