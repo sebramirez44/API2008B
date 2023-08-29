@@ -1,3 +1,4 @@
+# visualizacion no carga bien para mi, como que se abre la ventana pero no hay nada y se cierra no se si imnporte.
 import mesa
 from mesa import Agent, Model
 from mesa.time import SimultaneousActivation
@@ -24,7 +25,7 @@ class Barco(Agent):
   def __init__(self, unique_id, model):
     super().__init__(unique_id, model)
     self.contenedores = []
-    self.crearContenedores(12)
+    self.crearContenedores(10)
     # tenemos un atributo que ve la cantidad de contenedores porque luego podriamos cambiarlo a cuatro listas de contenedores.
     self.cantContenedores = len(self.contenedores)
 
@@ -89,13 +90,6 @@ class GruaRTG(Agent):
     super().__init__(unique_id, model)
     self.Contenedores = []
     self.destino = "Ninguno"
-    if self.unique_id == 3:
-      self.home_x, self.home_y = (15, 2)
-    elif self.unique_id == 5:
-      self.home_x, self.home_y = (15, 6)
-    elif self.unique_id == 8:
-      self.home_x, self.home_y = (15, 9)
-
 
   def movimiento(self):
     #print(self.destino)
@@ -112,15 +106,13 @@ class GruaRTG(Agent):
     yExpo = 2
 
     x,y = self.pos
-
     celda_enfrente = self.model.grid.get_cell_list_contents([(x-1, y)])
     celda_derecha = self.model.grid.get_cell_list_contents([(x, y+1)])
     celda_izquierda = self.model.grid.get_cell_list_contents([(x, y-1)])
     celda_abajo = self.model.grid.get_cell_list_contents([(x+1, y)])
-    celda_home = self.model.grid.get_cell_list_contents([(self.home_x, self.home_y)])
 
-    if self.destino == "Ninguno" and len(self.Contenedores) == 0:
-
+    if len(self.Contenedores) == 0:
+      
       if y > (yE) and len(celda_izquierda) == 0:
         y -= 1
       elif x > (xE+1) and len(celda_enfrente) == 0:
@@ -141,16 +133,14 @@ class GruaRTG(Agent):
             self.destino = "Vacios"
           else:
             self.destino = "Almacen"
-        elif len(expl.contenedores) == 0:
-          self.destino = "Home"
-
 
     elif self.destino == "Almacen":
-      if y < (yA) and len(celda_derecha) == 0:
-        y += 1
+      if y > (yA) and len(celda_izquierda) == 0:
+        y -= 1
       elif x < (xA-1) and len(celda_abajo) == 0:
         x += 1
-
+      elif y < (yA) and len(celda_derecha) == 0:
+        y += 1
       elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
         orga = celda_abajo[0]
         contenedor_a_agregar = self.Contenedores.pop()
@@ -162,7 +152,7 @@ class GruaRTG(Agent):
         y -= 1
       elif x < (xExpo-1) and len(celda_abajo) == 0:
         x += 1
-      elif len(celda_izquierda) != 0 and len(celda_abajo) != 0 and not isinstance(celda_abajo[0], Organizacion):
+      elif y < (yExpo) and len(celda_derecha) == 0:
         y += 1
 
       elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
@@ -172,23 +162,19 @@ class GruaRTG(Agent):
         orga.Contenedores.append(contenedor_a_agregar)
         self.destino = "Ninguno"
 
-
     elif self.destino == "Vacios":
-      if y < (yV) and len(celda_derecha) == 0:
-        y += 1
+      if y > (yV) and len(celda_izquierda) == 0:
+        y -= 1
       elif x < (xV-1) and len(celda_abajo) == 0:
         x += 1
-
+      elif y < (yV) and len(celda_derecha) == 0:
+        y += 1
 
       elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
         org = celda_abajo[0]
         contenedor_a_agregar = self.Contenedores.pop()
         org.Contenedores.append(contenedor_a_agregar)
         self.destino = "Ninguno"
-
-    elif len(celda_home) == 0 and self.destino == "Home":
-      print("regreso a home")
-      x,y = self.home_x, self.home_y
 
 
     new_position = (x,y)
@@ -306,7 +292,7 @@ class Puerto(Model):
     self.grid.place_agent(explanada, (x2, y2))
 
     gruaRTG = GruaRTG(3, self)
-    x3 = 15
+    x3 = 13
     y3 = 2
     self.schedule.add(gruaRTG)
     self.lista_master_agentes.append(gruaRTG)
@@ -319,7 +305,7 @@ class Puerto(Model):
     self.lista_master_agentes.append(self.exportados)
     self.grid.place_agent(self.exportados, (x4, y4))
     gruaRTG2 = GruaRTG(5, self)
-    x5 = 15
+    x5 = 13
     y5 = 6
     self.schedule.add(gruaRTG2)
     self.lista_master_agentes.append(gruaRTG2)
@@ -337,12 +323,13 @@ class Puerto(Model):
     self.lista_master_agentes.append(self.vacios)
     self.grid.place_agent(self.vacios, (x7, y7))
     gruaRTG3 = GruaRTG(8, self)
-    x8 = 15
+    x8 = 13
     y8 = 9
     self.schedule.add(gruaRTG3)
     self.lista_master_agentes.append(gruaRTG3)
     self.grid.place_agent(gruaRTG3, (x8, y8))
 
+    # para el API ya no necesitamos un datacollector, solo la funcion para llamar desde main.
 
   def get_data(self):
     # si el agente es barco, cant contenedores
@@ -452,10 +439,10 @@ class Puerto(Model):
     return data
 
   def step(self):
+    # self.datacollector.collect(self)
     self.schedule.step()
 
   def imprimo(self):
     self.almacen.imprimo_contenidos()
     self.exportados.imprimo_contenidos()
     self.vacios.imprimo_contenidos()
-
