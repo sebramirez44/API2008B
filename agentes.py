@@ -421,7 +421,21 @@ class Puerto(Model):
           "arregloContenedores" : contenedores_dict
         }
         data[agent.unique_id] = agent_data
-      
+      elif isinstance(agent, Organizacion):
+        contenedores_dict = []
+        for contenedorOrg in agent.Contenedores:
+          contenedor = {
+            "weight": contenedorOrg.weight,
+            "size": contenedorOrg.size,
+            "status": contenedorOrg.status
+          }
+          contenedor_dict.append(contenedor)
+        agent_data = {
+          "cantContenedores": len(agent.Contenedores),
+          "arregloContenedores" : contenedores_dict
+        }
+        data[agent.unique_id] = agent_data
+        # checar que tipo es para mandar eso
     return data
 
   def step(self):
