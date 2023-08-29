@@ -369,6 +369,7 @@ class Puerto(Model):
     
     for agent in self.lista_master_agentes:
       contenedores_dict = []
+      x,y = agent.pos
       for contenedorOrg in agent.contenedores:
         contenedor = {
             "weight" : contenedorOrg.weight,
@@ -377,11 +378,11 @@ class Puerto(Model):
             }
         contenedores_dict.append(contenedor)
       if isinstance(agent, Barco):
-        
         agent_data = {
           "cantContenedores": len(agent.contenedores),
           # crear una nueva lista contenedores con diccionarios que tienen el valor del contenedor
-          "arregloContenedores": contenedores_dict
+          "arregloContenedores": contenedores_dict,
+
         }
         
       elif isinstance(agent, GruaPortico):
@@ -396,13 +397,13 @@ class Puerto(Model):
           "arregloContenedores": contenedores_dict
         }
       elif isinstance(agent,  GruaRTG):
-        x,y = agent.pos
+        
         agent_data = {
           "cantContenedores": len(agent.contenedores),
           "destino": agent.destino,
+          "arregloContenedores" : contenedores_dict,
           "posX": x,
-          "posY": y,
-          "arregloContenedores" : contenedores_dict
+          "posY": y
         }
       elif isinstance(agent, Organizacion):
         agent_data = {
@@ -410,6 +411,8 @@ class Puerto(Model):
           "arregloContenedores" : contenedores_dict
         }
         # checar que tipo es para mandar eso
+      agent_data["posX"] = x
+      agent_data["posY"] = y
       data[agent.unique_id] = agent_data
     return data
 

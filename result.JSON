@@ -1,26 +1,36 @@
 {
-    "0": {
-        "cantContenedores": 10,
+    "barco": {
+        "cantContenedores": 12,
         "arregloContenedores": [
             {
                 "weight": 3,
-                "size": 40,
-                "status": "Importacion"
-            },
-            {
-                "weight": 3,
-                "size": 40,
-                "status": "Exportacion"
-            },
-            {
-                "weight": 4,
                 "size": 20,
                 "status": "Exportacion"
             },
             {
-                "weight": 7,
+                "weight": 10,
+                "size": 20,
+                "status": "Exportacion"
+            },
+            {
+                "weight": 6,
+                "size": 40,
+                "status": "Importacion"
+            },
+            {
+                "weight": 6,
+                "size": 40,
+                "status": "Exportacion"
+            },
+            {
+                "weight": 6,
                 "size": 20,
                 "status": "Importacion"
+            },
+            {
+                "weight": 8,
+                "size": 20,
+                "status": "Exportacion"
             },
             {
                 "weight": 6,
@@ -29,28 +39,28 @@
             },
             {
                 "weight": 2,
-                "size": 40,
+                "size": 20,
                 "status": "Exportacion"
+            },
+            {
+                "weight": 10,
+                "size": 20,
+                "status": "Importacion"
             },
             {
                 "weight": 3,
                 "size": 40,
-                "status": "Importacion"
-            },
-            {
-                "weight": 2,
-                "size": 20,
                 "status": "Exportacion"
             },
             {
-                "weight": 7,
-                "size": 20,
+                "weight": 9,
+                "size": 40,
                 "status": "Exportacion"
             },
             {
                 "weight": 2,
-                "size": 20,
-                "status": "Importacion"
+                "size": 40,
+                "status": "Exportacion"
             }
         ]
     },
@@ -74,29 +84,41 @@
         "cantContenedores": 0,
         "arregloContenedores": []
     },
-    "2": {
+    "exp": {
         "cantContenedores": 0,
         "arregloContenedores": []
     },
-    "3": {
+    "gruaRTG": {
         "cantContenedores": 0,
         "destino": "Ninguno",
-        "posX": 11,
-        "posY": 2,
+        "posX": 15,
+        "posY": 3,
         "arregloContenedores": []
     },
-    "5": {
+    "exportados": {
+        "cantContenedores": 0,
+        "arregloContenedores": []
+    },
+    "gruaRTG2": {
         "cantContenedores": 0,
         "destino": "Ninguno",
-        "posX": 12,
+        "posX": 15,
         "posY": 5,
         "arregloContenedores": []
     },
-    "8": {
+    "almacen": {
+        "cantContenedores": 0,
+        "arregloContenedores": []
+    },
+    "vacios": {
+        "cantContenedores": 0,
+        "arregloContenedores": []
+    },
+    "gruaRTG3": {
         "cantContenedores": 0,
         "destino": "Ninguno",
-        "posX": 13,
-        "posY": 7,
+        "posX": 15,
+        "posY": 8,
         "arregloContenedores": []
     }
 }
