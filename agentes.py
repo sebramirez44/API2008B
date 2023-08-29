@@ -298,7 +298,7 @@ class Puerto(Model):
     self.grid.place_agent(gruaP4, (3, 7))
     #------------------------------------
 
-    explanada = Explanada("exp", self)
+    explanada = Explanada("explanada", self)
     x2 = 6
     y2 = 5
     self.schedule.add(explanada)

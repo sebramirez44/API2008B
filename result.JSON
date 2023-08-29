@@ -3,43 +3,53 @@
         "cantContenedores": 12,
         "arregloContenedores": [
             {
+                "weight": 7,
+                "size": 20,
+                "status": "Exportacion"
+            },
+            {
                 "weight": 3,
-                "size": 20,
-                "status": "Exportacion"
-            },
-            {
-                "weight": 10,
-                "size": 20,
-                "status": "Exportacion"
-            },
-            {
-                "weight": 6,
-                "size": 40,
-                "status": "Importacion"
-            },
-            {
-                "weight": 6,
                 "size": 40,
                 "status": "Exportacion"
-            },
-            {
-                "weight": 6,
-                "size": 20,
-                "status": "Importacion"
             },
             {
                 "weight": 8,
                 "size": 20,
-                "status": "Exportacion"
+                "status": "Importacion"
             },
             {
-                "weight": 6,
+                "weight": 9,
                 "size": 40,
                 "status": "Importacion"
             },
             {
-                "weight": 2,
+                "weight": 7,
                 "size": 20,
+                "status": "Importacion"
+            },
+            {
+                "weight": 9,
+                "size": 20,
+                "status": "Importacion"
+            },
+            {
+                "weight": 3,
+                "size": 20,
+                "status": "Exportacion"
+            },
+            {
+                "weight": 6,
+                "size": 20,
+                "status": "Importacion"
+            },
+            {
+                "weight": 9,
+                "size": 20,
+                "status": "Importacion"
+            },
+            {
+                "weight": 6,
+                "size": 40,
                 "status": "Exportacion"
             },
             {
@@ -48,77 +58,85 @@
                 "status": "Importacion"
             },
             {
-                "weight": 3,
-                "size": 40,
-                "status": "Exportacion"
-            },
-            {
-                "weight": 9,
-                "size": 40,
-                "status": "Exportacion"
-            },
-            {
-                "weight": 2,
+                "weight": 6,
                 "size": 40,
                 "status": "Exportacion"
             }
-        ]
+        ],
+        "posX": 2,
+        "posY": 12
     },
     "p1": {
         "cargando": false,
         "cantContenedores": 0,
-        "arregloContenedores": []
+        "arregloContenedores": [],
+        "posX": 3,
+        "posY": 4
     },
     "p2": {
         "cargando": false,
         "cantContenedores": 0,
-        "arregloContenedores": []
+        "arregloContenedores": [],
+        "posX": 3,
+        "posY": 5
     },
     "p3": {
         "cargando": false,
         "cantContenedores": 0,
-        "arregloContenedores": []
+        "arregloContenedores": [],
+        "posX": 3,
+        "posY": 6
     },
     "p4": {
         "cargando": false,
         "cantContenedores": 0,
-        "arregloContenedores": []
+        "arregloContenedores": [],
+        "posX": 3,
+        "posY": 7
     },
-    "exp": {
+    "explanada": {
         "cantContenedores": 0,
-        "arregloContenedores": []
+        "arregloContenedores": [],
+        "posX": 6,
+        "posY": 5
     },
     "gruaRTG": {
         "cantContenedores": 0,
         "destino": "Ninguno",
+        "arregloContenedores": [],
         "posX": 15,
-        "posY": 3,
-        "arregloContenedores": []
+        "posY": 3
     },
     "exportados": {
         "cantContenedores": 0,
-        "arregloContenedores": []
+        "arregloContenedores": [],
+        "posX": 14,
+        "posY": 2
     },
     "gruaRTG2": {
         "cantContenedores": 0,
         "destino": "Ninguno",
+        "arregloContenedores": [],
         "posX": 15,
-        "posY": 5,
-        "arregloContenedores": []
+        "posY": 5
     },
     "almacen": {
         "cantContenedores": 0,
-        "arregloContenedores": []
+        "arregloContenedores": [],
+        "posX": 14,
+        "posY": 6
     },
     "vacios": {
         "cantContenedores": 0,
-        "arregloContenedores": []
+        "arregloContenedores": [],
+        "posX": 14,
+        "posY": 9
     },
     "gruaRTG3": {
         "cantContenedores": 0,
         "destino": "Ninguno",
+        "arregloContenedores": [],
         "posX": 15,
-        "posY": 8,
-        "arregloContenedores": []
+        "posY": 8
     }
 }
