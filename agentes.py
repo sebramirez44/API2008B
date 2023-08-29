@@ -258,6 +258,7 @@ class Puerto(Model):
     x = 2
     y = 13
     self.schedule.add(barco)
+    self.lista_master_agentes.append(barco)
     self.grid.place_agent(barco, (x,y))
     # declaro otros x y y por si acaso
 
@@ -331,14 +332,54 @@ class Puerto(Model):
     # para el API ya no necesitamos un datacollector, solo la funcion para llamar desde main.
 
   def get_data(self):
+    # si el agente es barco, cant contenedores
+    # arreglo de contenedores
     data = {}
+    # Barco: {
+    #   cantContenedores: int
+    #   arregloContenedores: Contenedor[]
+    # }
+    # gruaP: {
+    #   cargando: bool
+    #   cantConenedores: int
+    #   arregloContenedores: Contenedor[]
+    # }
+    # explanada: {
+    #   arregloContenedores: Contenedor[]
+    #   cantContenedores: int
+    # }
+    # gruaRTG: {
+    #   arregloContenedores: Contenedor[]
+    #   Destino: [Ninguno, Exportacion, Vacios, Almacen, Home]
+    #   posicion (x, y)
+    # }
+
     for agent in self.lista_master_agentes:
-    #   aqui agregar la logica que si es un agente grua mandar si esta cargando o no.
-      data[agent.unique_id] = agent.pos
+      if isinstance(agent, Barco):
+        contenedores_dict = []
+        for contenedorOrg in agent.contenedores:
+          contenedor = {
+            "weight" : contenedorOrg.weight,
+            "size" : contenedorOrg.size,
+            "status" : contenedorOrg.status
+          }
+          # contenedor["weight"] = contenedorOrg.weight
+          # contenedor["size"] = contenedorOrg.size
+          # contenedor["status"] = contenedorOrg.status
+          contenedores_dict.append(contenedor)
+        agent_data = {
+          "cantContenedores": len(agent.contenedores),
+          # crear una nueva lista contenedores con diccionarios que tienen el valor del contenedor
+          "arregloContenedores": contenedores_dict
+        }
+        data[agent.unique_id] = agent_data
+      # data[agent.unique_id] tiene que ser un objeto con valores definidos
+      # data[agent.unique_id] = agent.pos
+      
     return data
 
   def step(self):
-    self.datacollector.collect(self)
+    # self.datacollector.collect(self)
     self.schedule.step()
 
   def imprimo(self):
