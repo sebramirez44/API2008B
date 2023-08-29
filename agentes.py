@@ -87,7 +87,7 @@ class Barco(Agent):
 class GruaRTG(Agent):
   def __init__(self, unique_id, model):
     super().__init__(unique_id, model)
-    self.Contenedores = []
+    self.contenedores = []
     self.destino = "Ninguno"
     if self.unique_id == 3:
       self.home_x, self.home_y = (15, 2)
@@ -119,7 +119,7 @@ class GruaRTG(Agent):
     celda_abajo = self.model.grid.get_cell_list_contents([(x+1, y)])
     celda_home = self.model.grid.get_cell_list_contents([(self.home_x, self.home_y)])
 
-    if self.destino == "Ninguno" and len(self.Contenedores) == 0:
+    if self.destino == "Ninguno" and len(self.contenedores) == 0:
 
       if y > (yE) and len(celda_izquierda) == 0:
         y -= 1
@@ -131,13 +131,13 @@ class GruaRTG(Agent):
         expl = self.model.grid.get_cell_list_contents([(x-1, y)])[0]
         if len(expl.contenedores) > 0:
           cont = expl.contenedores.pop()
-          self.Contenedores.append(cont)
+          self.contenedores.append(cont)
           #print(f"soy la grua RTG {self.unique_id} y tengo el contenedor {self.Contenedores[0]}")
 
           # Aquí viene la lógica para decidir a donde llevar el contenedor
-          if (self.Contenedores[0].status == "Exportacion"):
+          if (self.contenedores[0].status == "Exportacion"):
             self.destino = "Exportacion"
-          elif (self.Contenedores[0].weight < 2 and self.Contenedores[0].size == 20) or (self.Contenedores[0].weight < 4 and self.Contenedores[0].size == 40):
+          elif (self.contenedores[0].weight < 2 and self.contenedores[0].size == 20) or (self.contenedores[0].weight < 4 and self.contenedores[0].size == 40):
             self.destino = "Vacios"
           else:
             self.destino = "Almacen"
@@ -153,8 +153,8 @@ class GruaRTG(Agent):
 
       elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
         orga = celda_abajo[0]
-        contenedor_a_agregar = self.Contenedores.pop()
-        orga.Contenedores.append(contenedor_a_agregar)
+        contenedor_a_agregar = self.contenedores.pop()
+        orga.contenedores.append(contenedor_a_agregar)
         self.destino = "Ninguno"
 
     elif self.destino == "Exportacion":
@@ -167,9 +167,9 @@ class GruaRTG(Agent):
 
       elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
         orga = celda_abajo[0]
-        contenedor_a_agregar = self.Contenedores.pop()
+        contenedor_a_agregar = self.contenedores.pop()
         #print(self.Contenedores)
-        orga.Contenedores.append(contenedor_a_agregar)
+        orga.contenedores.append(contenedor_a_agregar)
         self.destino = "Ninguno"
 
 
@@ -182,8 +182,8 @@ class GruaRTG(Agent):
 
       elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
         org = celda_abajo[0]
-        contenedor_a_agregar = self.Contenedores.pop()
-        org.Contenedores.append(contenedor_a_agregar)
+        contenedor_a_agregar = self.contenedores.pop()
+        org.contenedores.append(contenedor_a_agregar)
         self.destino = "Ninguno"
 
     elif len(celda_home) == 0 and self.destino == "Home":
@@ -236,25 +236,25 @@ class Organizacion(Agent):
   def __init__(self, unique_id, model, tipoContenedores):
     super().__init__(unique_id, model)
     self.tipoContenedores = tipoContenedores
-    self.Contenedores = []
+    self.contenedores = []
   def imprimo_contenidos(self):
     if self.tipoContenedores == "Almacen":
       print("-------------------------------------------")
-      print("En el área de almacén hay " + str(len(self.Contenedores)) + " contenedores")
-      if len(self.Contenedores) > 0:
+      print("En el área de almacén hay " + str(len(self.contenedores)) + " contenedores")
+      if len(self.contenedores) > 0:
         for contenedor in self.Contenedores:
           print("peso: " + str(contenedor.weight) + ", tamaño: " + str(contenedor.size) + ", estatus: " + str(contenedor.status))
     if self.tipoContenedores == "Vacios":
       print("-------------------------------------------")
-      print("En el área de vacíos hay " + str(len(self.Contenedores)) + " contenedores")
-      if len(self.Contenedores) > 0:
-        for contenedor in self.Contenedores:
+      print("En el área de vacíos hay " + str(len(self.contenedores)) + " contenedores")
+      if len(self.contenedores) > 0:
+        for contenedor in self.contenedores:
           print("peso: " + str(contenedor.weight) + ", tamaño: " + str(contenedor.size) + ", estatus: " + str(contenedor.status))
     if self.tipoContenedores == "Exportados":
       print("-------------------------------------------")
-      print("En el área de exportados hay " + str(len(self.Contenedores)) + " contenedores")
-      if len(self.Contenedores) > 0:
-        for contenedor in self.Contenedores:
+      print("En el área de exportados hay " + str(len(self.contenedores)) + " contenedores")
+      if len(self.contenedores) > 0:
+        for contenedor in self.contenedores:
           print("peso: " + str(contenedor.weight) + ", tamaño: " + str(contenedor.size) + ", estatus: " + str(contenedor.status))
 
 
@@ -366,89 +366,51 @@ class Puerto(Model):
     #   Destino: [Ninguno, Exportacion, Vacios, Almacen, Home]
     #   posicion (x, y)
     # }
-
+    
     for agent in self.lista_master_agentes:
-      if isinstance(agent, Barco):
-        contenedores_dict = []
-        for contenedorOrg in agent.contenedores:
-          contenedor = {
+      contenedores_dict = []
+      for contenedorOrg in agent.contenedores:
+        contenedor = {
             "weight" : contenedorOrg.weight,
             "size" : contenedorOrg.size,
             "status" : contenedorOrg.status
-          }
-          # contenedor["weight"] = contenedorOrg.weight
-          # contenedor["size"] = contenedorOrg.size
-          # contenedor["status"] = contenedorOrg.status
-          contenedores_dict.append(contenedor)
+            }
+        contenedores_dict.append(contenedor)
+      if isinstance(agent, Barco):
+        
         agent_data = {
           "cantContenedores": len(agent.contenedores),
           # crear una nueva lista contenedores con diccionarios que tienen el valor del contenedor
           "arregloContenedores": contenedores_dict
         }
-        data[agent.unique_id] = agent_data
+        
       elif isinstance(agent, GruaPortico):
-        contenedores_dict = []
-        for contenedorOrg in agent.contenedores:
-          contenedor = {
-            "weight": contenedorOrg.weight,
-            "size" : contenedorOrg.size,
-            "status" : contenedorOrg.status
-          }
-          contenedores_dict.append(contenedor)
         agent_data = {
           "cargando": agent.cargando,
           "cantContenedores": len(agent.contenedores),
           "arregloContenedores": contenedores_dict
         }
-        data[agent.unique_id] = agent_data
       elif isinstance(agent, Explanada):
-        contenedores_dict = []
-        for contenedorOrg in agent.contenedores:
-          contenedor = {
-            "weight": contenedorOrg.weight,
-            "size": contenedorOrg.size,
-            "status": contenedorOrg.status
-          }
-          contenedores_dict.append(contenedor)
         agent_data = {
           "cantContenedores": len(agent.contenedores),
           "arregloContenedores": contenedores_dict
         }
-        data[agent.unique_id] = agent_data
       elif isinstance(agent,  GruaRTG):
-        contenedores_dict = []
-        # gruaRTG tiene atributo contenedores con mayuscula, tal vez cambiarlo si es mas problema
-        for contenedorOrg in agent.Contenedores:
-          contenedor = {
-            "weight": contenedorOrg.weight,
-            "size": contenedorOrg.size,
-            "status": contenedorOrg.status
-          }
-          contenedor_dict.append(contenedor)
         x,y = agent.pos
         agent_data = {
-          "cantContenedores": len(agent.Contenedores),
+          "cantContenedores": len(agent.contenedores),
           "destino": agent.destino,
           "posX": x,
           "posY": y,
           "arregloContenedores" : contenedores_dict
         }
-        data[agent.unique_id] = agent_data
       elif isinstance(agent, Organizacion):
-        contenedores_dict = []
-        for contenedorOrg in agent.Contenedores:
-          contenedor = {
-            "weight": contenedorOrg.weight,
-            "size": contenedorOrg.size,
-            "status": contenedorOrg.status
-          }
-          contenedor_dict.append(contenedor)
         agent_data = {
-          "cantContenedores": len(agent.Contenedores),
+          "cantContenedores": len(agent.contenedores),
           "arregloContenedores" : contenedores_dict
         }
-        data[agent.unique_id] = agent_data
         # checar que tipo es para mandar eso
+      data[agent.unique_id] = agent_data
     return data
 
   def step(self):
