@@ -89,11 +89,11 @@ class GruaRTG(Agent):
     super().__init__(unique_id, model)
     self.contenedores = []
     self.destino = "Ninguno"
-    if self.unique_id == 3:
+    if self.unique_id == "gruaRTG":
       self.home_x, self.home_y = (15, 2)
-    elif self.unique_id == 5:
+    elif self.unique_id == "gruaRTG2":
       self.home_x, self.home_y = (15, 6)
-    elif self.unique_id == 8:
+    elif self.unique_id == "gruaRTG3":
       self.home_x, self.home_y = (15, 9)
 
 
@@ -267,7 +267,7 @@ class Puerto(Model):
     self.schedule = SimultaneousActivation(self)
     self.grid = SingleGrid(self.width, self.height, False)
     # cambiar la posicion donde va el barco
-    barco = Barco(0, self)
+    barco = Barco("barco", self)
     # si x y y empiezan en 0
     x = 2
     y = 13
@@ -298,45 +298,45 @@ class Puerto(Model):
     self.grid.place_agent(gruaP4, (3, 7))
     #------------------------------------
 
-    explanada = Explanada(2, self)
+    explanada = Explanada("exp", self)
     x2 = 6
     y2 = 5
     self.schedule.add(explanada)
     self.lista_master_agentes.append(explanada)
     self.grid.place_agent(explanada, (x2, y2))
 
-    gruaRTG = GruaRTG(3, self)
+    gruaRTG = GruaRTG("gruaRTG", self)
     x3 = 15
     y3 = 2
     self.schedule.add(gruaRTG)
     self.lista_master_agentes.append(gruaRTG)
     self.grid.place_agent(gruaRTG, (x3, y3))
 
-    self.exportados = Organizacion(4, self, "Exportados")
+    self.exportados = Organizacion("exportados", self, "Exportados")
     x4 = 14
     y4 = 2
     self.schedule.add(self.exportados)
     self.lista_master_agentes.append(self.exportados)
     self.grid.place_agent(self.exportados, (x4, y4))
-    gruaRTG2 = GruaRTG(5, self)
+    gruaRTG2 = GruaRTG("gruaRTG2", self)
     x5 = 15
     y5 = 6
     self.schedule.add(gruaRTG2)
     self.lista_master_agentes.append(gruaRTG2)
     self.grid.place_agent(gruaRTG2, (x5, y5))
-    self.almacen = Organizacion(6, self, "Almacen")
+    self.almacen = Organizacion("almacen", self, "Almacen")
     x6 = 14
     y6 = 6
     self.schedule.add(self.almacen)
     self.lista_master_agentes.append(self.almacen)
     self.grid.place_agent(self.almacen, (x6, y6))
-    self.vacios = Organizacion(7, self, "Vacios")
+    self.vacios = Organizacion("vacios", self, "Vacios")
     x7 = 14
     y7 = 9
     self.schedule.add(self.vacios)
     self.lista_master_agentes.append(self.vacios)
     self.grid.place_agent(self.vacios, (x7, y7))
-    gruaRTG3 = GruaRTG(8, self)
+    gruaRTG3 = GruaRTG("gruaRTG3", self)
     x8 = 15
     y8 = 9
     self.schedule.add(gruaRTG3)
