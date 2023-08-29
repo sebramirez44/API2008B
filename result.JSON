@@ -1,0 +1,102 @@
+{
+    "0": {
+        "cantContenedores": 10,
+        "arregloContenedores": [
+            {
+                "weight": 3,
+                "size": 40,
+                "status": "Importacion"
+            },
+            {
+                "weight": 3,
+                "size": 40,
+                "status": "Exportacion"
+            },
+            {
+                "weight": 4,
+                "size": 20,
+                "status": "Exportacion"
+            },
+            {
+                "weight": 7,
+                "size": 20,
+                "status": "Importacion"
+            },
+            {
+                "weight": 6,
+                "size": 40,
+                "status": "Importacion"
+            },
+            {
+                "weight": 2,
+                "size": 40,
+                "status": "Exportacion"
+            },
+            {
+                "weight": 3,
+                "size": 40,
+                "status": "Importacion"
+            },
+            {
+                "weight": 2,
+                "size": 20,
+                "status": "Exportacion"
+            },
+            {
+                "weight": 7,
+                "size": 20,
+                "status": "Exportacion"
+            },
+            {
+                "weight": 2,
+                "size": 20,
+                "status": "Importacion"
+            }
+        ]
+    },
+    "p1": {
+        "cargando": false,
+        "cantContenedores": 0,
+        "arregloContenedores": []
+    },
+    "p2": {
+        "cargando": false,
+        "cantContenedores": 0,
+        "arregloContenedores": []
+    },
+    "p3": {
+        "cargando": false,
+        "cantContenedores": 0,
+        "arregloContenedores": []
+    },
+    "p4": {
+        "cargando": false,
+        "cantContenedores": 0,
+        "arregloContenedores": []
+    },
+    "2": {
+        "cantContenedores": 0,
+        "arregloContenedores": []
+    },
+    "3": {
+        "cantContenedores": 0,
+        "destino": "Ninguno",
+        "posX": 11,
+        "posY": 2,
+        "arregloContenedores": []
+    },
+    "5": {
+        "cantContenedores": 0,
+        "destino": "Ninguno",
+        "posX": 12,
+        "posY": 5,
+        "arregloContenedores": []
+    },
+    "8": {
+        "cantContenedores": 0,
+        "destino": "Ninguno",
+        "posX": 13,
+        "posY": 7,
+        "arregloContenedores": []
+    }
+}
