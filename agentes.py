@@ -23,6 +23,8 @@ class Contenedor:
 class Barco(Agent):
   def __init__(self, unique_id, model):
     super().__init__(unique_id, model)
+    # tiene que ser un numero muy grande porque tiene 4 gruas portico que disminuyen este numero.
+    self.wait_steps = 100
     self.contenedores = []
     self.crearContenedores(12)
     # tenemos un atributo que ve la cantidad de contenedores porque luego podriamos cambiarlo a cuatro listas de contenedores.
@@ -56,9 +58,12 @@ class Barco(Agent):
       for i in range(0,4):
         if len(self.contenedores) != 0:
           if len(cellmates[i]) > 0 and cellmates[i][0].cargando == False:
-            contenedorMoviendo = self.contenedores.pop()
-            #print("pasamos un contenedor")
-            cellmates[i][0].contenedores.append(contenedorMoviendo)
+            if self.wait_steps > 0:
+              self.wait_steps = self.wait_steps - 1
+            else:
+              contenedorMoviendo = self.contenedores.pop()
+              #print("pasamos un contenedor")
+              cellmates[i][0].contenedores.append(contenedorMoviendo)
 
     new_position = (x,y)
     self.model.grid.move_agent(self, new_position)
@@ -87,6 +92,8 @@ class Barco(Agent):
 class GruaRTG(Agent):
   def __init__(self, unique_id, model):
     super().__init__(unique_id, model)
+    self.esperaInicial = 25
+    self.esperaContenedores = 10
     self.contenedores = []
     self.destino = "Ninguno"
     if self.unique_id == "gruaRTG":
@@ -119,80 +126,87 @@ class GruaRTG(Agent):
     celda_abajo = self.model.grid.get_cell_list_contents([(x+1, y)])
     celda_home = self.model.grid.get_cell_list_contents([(self.home_x, self.home_y)])
 
-    if self.destino == "Ninguno" and len(self.contenedores) == 0:
+    if self.esperaInicial > 0:
+      self.esperaInicial = self.esperaInicial - 1
+    else:
+      if self.destino == "Ninguno" and len(self.contenedores) == 0:
 
-      if y > (yE) and len(celda_izquierda) == 0:
-        y -= 1
-      elif x > (xE+1) and len(celda_enfrente) == 0:
-        x -= 1
-      elif y < (yE) and len(celda_derecha) == 0:
-        y += 1
-      elif len(celda_enfrente) > 0 and isinstance(celda_enfrente[0], Explanada):
-        expl = self.model.grid.get_cell_list_contents([(x-1, y)])[0]
-        if len(expl.contenedores) > 0:
-          cont = expl.contenedores.pop()
-          self.contenedores.append(cont)
-          #print(f"soy la grua RTG {self.unique_id} y tengo el contenedor {self.Contenedores[0]}")
+        if y > (yE) and len(celda_izquierda) == 0:
+          y -= 1
+        elif x > (xE+1) and len(celda_enfrente) == 0:
+          x -= 1
+        elif y < (yE) and len(celda_derecha) == 0:
+          y += 1
+        elif len(celda_enfrente) > 0 and isinstance(celda_enfrente[0], Explanada):
+          expl = self.model.grid.get_cell_list_contents([(x-1, y)])[0]
+          if len(expl.contenedores) > 0:
+            if self.esperaContenedores > 0:
+              self.esperaContenedores = self.esperaContenedores - 1
+            else:
+              cont = expl.contenedores.pop()
+              self.contenedores.append(cont)
+              #print(f"soy la grua RTG {self.unique_id} y tengo el contenedor {self.Contenedores[0]}")
 
-          # Aquí viene la lógica para decidir a donde llevar el contenedor
-          if (self.contenedores[0].status == "Exportacion"):
-            self.destino = "Exportacion"
-          elif (self.contenedores[0].weight < 2 and self.contenedores[0].size == 20) or (self.contenedores[0].weight < 4 and self.contenedores[0].size == 40):
-            self.destino = "Vacios"
-          else:
-            self.destino = "Almacen"
-        elif len(expl.contenedores) == 0:
-          self.destino = "Home"
-
-
-    elif self.destino == "Almacen":
-      if y < (yA) and len(celda_derecha) == 0:
-        y += 1
-      elif x < (xA-1) and len(celda_abajo) == 0:
-        x += 1
-
-      elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
-        orga = celda_abajo[0]
-        contenedor_a_agregar = self.contenedores.pop()
-        orga.contenedores.append(contenedor_a_agregar)
-        self.destino = "Ninguno"
-
-    elif self.destino == "Exportacion":
-      if y > (yExpo) and len(celda_izquierda) == 0:
-        y -= 1
-      elif x < (xExpo-1) and len(celda_abajo) == 0:
-        x += 1
-      elif len(celda_izquierda) != 0 and len(celda_abajo) != 0 and not isinstance(celda_abajo[0], Organizacion):
-        y += 1
-
-      elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
-        orga = celda_abajo[0]
-        contenedor_a_agregar = self.contenedores.pop()
-        #print(self.Contenedores)
-        orga.contenedores.append(contenedor_a_agregar)
-        self.destino = "Ninguno"
+              # Aquí viene la lógica para decidir a donde llevar el contenedor
+              if (self.contenedores[0].status == "Exportacion"):
+                self.destino = "Exportacion"
+              elif (self.contenedores[0].weight < 2 and self.contenedores[0].size == 20) or (self.contenedores[0].weight < 4 and self.contenedores[0].size == 40):
+                self.destino = "Vacios"
+              else:
+                self.destino = "Almacen"
+              self.esperaContenedores = 10
+          elif len(expl.contenedores) == 0:
+            self.destino = "Home"
 
 
-    elif self.destino == "Vacios":
-      if y < (yV) and len(celda_derecha) == 0:
-        y += 1
-      elif x < (xV-1) and len(celda_abajo) == 0:
-        x += 1
+      elif self.destino == "Almacen":
+        if y < (yA) and len(celda_derecha) == 0:
+          y += 1
+        elif x < (xA-1) and len(celda_abajo) == 0:
+          x += 1
+
+        elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
+          orga = celda_abajo[0]
+          contenedor_a_agregar = self.contenedores.pop()
+          orga.contenedores.append(contenedor_a_agregar)
+          self.destino = "Ninguno"
+
+      elif self.destino == "Exportacion":
+        if y > (yExpo) and len(celda_izquierda) == 0:
+          y -= 1
+        elif x < (xExpo-1) and len(celda_abajo) == 0:
+          x += 1
+        elif len(celda_izquierda) != 0 and len(celda_abajo) != 0 and not isinstance(celda_abajo[0], Organizacion):
+          y += 1
+
+        elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
+          orga = celda_abajo[0]
+          contenedor_a_agregar = self.contenedores.pop()
+          #print(self.Contenedores)
+          orga.contenedores.append(contenedor_a_agregar)
+          self.destino = "Ninguno"
 
 
-      elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
-        org = celda_abajo[0]
-        contenedor_a_agregar = self.contenedores.pop()
-        org.contenedores.append(contenedor_a_agregar)
-        self.destino = "Ninguno"
-
-    elif len(celda_home) == 0 and self.destino == "Home":
-      print("regreso a home")
-      x,y = self.home_x, self.home_y
+      elif self.destino == "Vacios":
+        if y < (yV) and len(celda_derecha) == 0:
+          y += 1
+        elif x < (xV-1) and len(celda_abajo) == 0:
+          x += 1
 
 
-    new_position = (x,y)
-    self.model.grid.move_agent(self, new_position)
+        elif len(celda_abajo) > 0 and isinstance(celda_abajo[0], Organizacion):
+          org = celda_abajo[0]
+          contenedor_a_agregar = self.contenedores.pop()
+          org.contenedores.append(contenedor_a_agregar)
+          self.destino = "Ninguno"
+
+      elif len(celda_home) == 0 and self.destino == "Home":
+        print("regreso a home")
+        x,y = self.home_x, self.home_y
+
+
+      new_position = (x,y)
+      self.model.grid.move_agent(self, new_position)
 
 
 
