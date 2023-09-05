@@ -24,7 +24,7 @@ class Barco(Agent):
   def __init__(self, unique_id, model):
     super().__init__(unique_id, model)
     # tiene que ser un numero muy grande porque tiene 4 gruas portico que disminuyen este numero.
-    self.wait_steps = 100
+    self.wait_steps = 85
     self.contenedores = []
     self.crearContenedores(12)
     # tenemos un atributo que ve la cantidad de contenedores porque luego podriamos cambiarlo a cuatro listas de contenedores.
@@ -93,7 +93,7 @@ class GruaRTG(Agent):
   def __init__(self, unique_id, model):
     super().__init__(unique_id, model)
     self.esperaInicial = 25
-    self.esperaContenedores = 10
+    self.esperaContenedores = 2
     self.contenedores = []
     self.destino = "Ninguno"
     if self.unique_id == "gruaRTG":
